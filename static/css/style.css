@@ -1,77 +1,205 @@
-/* Custom styles for The Reef Chat */
+/* Custom styles for The Reef Chat - Dark Theme */
 
 /* Smooth transitions */
 * {
-    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
-/* Custom scrollbar for chat messages */
+/* Chat message container styling */
+/* Adding padding, border and subtle backdrop filter to visually separate
+   the messages area from the background without changing the colour palette */
+#chatMessages {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #374151;
+  background-color: rgba(31, 41, 55, 0.6);
+  backdrop-filter: blur(4px);
+  overflow-y: auto;
+}
+
+/* Custom dark scrollbar for chat messages */
 #chatMessages::-webkit-scrollbar {
-    width: 6px;
+  width: 6px;
 }
 
 #chatMessages::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 3px;
+  background: #1f2937;
+  border-radius: 3px;
 }
 
 #chatMessages::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 3px;
+  background: #4b5563;
+  border-radius: 3px;
 }
 
 #chatMessages::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+  background: #6b7280;
 }
 
 /* Loading animation improvements */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .fade-in {
-    animation: fadeIn 0.5s ease-out;
+  animation: fadeIn 0.5s ease-out;
 }
 
-/* File drop zone hover effects */
-.drop-zone {
-    transition: all 0.3s ease;
+/* Logo animations */
+@keyframes logoSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.drop-zone:hover {
-    background-color: #f8fafc;
-    border-color: #3b82f6;
+.logo-loading {
+  animation: logoSpin 2s linear infinite;
 }
 
-/* Message styling */
+/* Message styling for dark theme */
+/* Use consistent padding, rounding and shadow for both user and assistant bubbles */
+.message-user,
+.message-assistant {
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
 .message-user {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #e8877c 0%, #dc6b5f 100%);
+  border: 1px solid rgba(232, 135, 124, 0.4);
 }
 
 .message-assistant {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
+  background: #1f2937;
+  border: 1px solid #374151;
 }
 
-/* Button hover effects */
+/* Button hover effects with coral theme */
 .btn-primary {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    transform: translateY(0);
-    transition: all 0.2s ease;
+  background: linear-gradient(135deg, #e8877c 0%, #dc6b5f 100%);
+  transform: translateY(0);
+  transition: all 0.2s ease;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1rem;
+  box-shadow: 0 2px 8px rgba(232, 135, 124, 0.2);
 }
 
 .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(232, 135, 124, 0.3);
 }
 
-/* Suggestion buttons */
+/* Suggestion buttons for dark theme */
 .suggestion-btn {
-    transition: all 0.2s ease;
+  transition: all 0.2s ease;
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1rem;
 }
 
 .suggestion-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(232, 135, 124, 0.2);
+  background: #2c3748;
+}
+
+/* Focus states for dark theme */
+input:focus {
+  box-shadow: 0 0 0 2px rgba(232, 135, 124, 0.5);
+  outline: none;
+}
+
+/* Base styling for inputs */
+input[type="text"] {
+  border-radius: 0.5rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid #374151;
+  background-color: #0f172a;
+  color: #e5e7eb;
+}
+
+/* Sleek gradient background and typography */
+body {
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+  font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
+  color: #e5e7eb;
+}
+
+/* Custom markdown styling for chat messages */
+.message-content {
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.message-content p {
+  margin: 0 0 0.5rem 0;
+}
+
+.message-content p:last-child {
+  margin-bottom: 0;
+}
+
+.message-content strong {
+  font-weight: 600;
+  color: #f3f4f6;
+}
+
+.message-content em {
+  font-style: italic;
+  color: #d1d5db;
+}
+
+.message-content ul,
+.message-content ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.message-content li {
+  margin: 0.25rem 0;
+}
+
+.message-content code {
+  background-color: rgba(55, 65, 81, 0.8);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-family: 'Monaco', 'Consolas', monospace;
+  font-size: 0.8125rem;
+  color: #e8877c;
+}
+
+.message-content pre {
+  background-color: rgba(31, 41, 55, 0.8);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin: 0.5rem 0;
+  overflow-x: auto;
+  border: 1px solid rgba(55, 65, 81, 0.5);
+}
+
+.message-content pre code {
+  background: none;
+  padding: 0;
+  color: #d1d5db;
+}
+
+.message-content blockquote {
+  border-left: 3px solid #e8877c;
+  padding-left: 1rem;
+  margin: 0.5rem 0;
+  font-style: italic;
+  color: #d1d5db;
 }

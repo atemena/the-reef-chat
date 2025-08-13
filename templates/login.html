@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Reef Chat - Login</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='assests/reef-logo-main.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='assests/reef-logo-main.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='assests/reef-logo-main.png') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assests/reef-logo-main.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'reef-coral': '#E8877C',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+        }
+    </style>
+</head>
+<body class="bg-black min-h-screen text-white flex items-center justify-center">
+    <div class="max-w-md w-full mx-4">
+        <div class="text-center mb-8">
+            <img src="{{ url_for('static', filename='assests/reef-logo-main.png') }}" 
+                 alt="The Reef" 
+                 class="w-28 h-14 mx-auto mb-4">
+            <h1 class="text-2xl font-semibold text-white mb-1 tracking-tight">The Reef Chat</h1>
+            <p class="text-gray-400 text-sm font-light">Enter password to access</p>
+        </div>
+
+        <div class="bg-gray-900/70 rounded-xl border border-gray-700/50 p-6 backdrop-blur-sm">
+            {% if error %}
+                <div class="bg-red-600 text-white px-4 py-2 rounded-lg mb-4 text-sm">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <form method="POST" class="space-y-4">
+                <div>
+                    <label for="password" class="block text-xs font-medium text-gray-400 mb-2 uppercase tracking-wider">
+                        Password
+                    </label>
+                    <input type="password" 
+                           id="password" 
+                           name="password" 
+                           required
+                           autofocus
+                           class="w-full px-4 py-3 bg-gray-800/60 border border-gray-700/50 rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-reef-coral/50 focus:border-reef-coral/30 transition-all duration-200 backdrop-blur-sm"
+                           placeholder="Enter your password">
+                </div>
+                
+                <button type="submit" 
+                        class="w-full bg-reef-coral text-white px-6 py-3 rounded-lg hover:bg-reef-coral/90 transition-all duration-200 font-medium text-sm shadow-lg shadow-reef-coral/20">
+                    Access The Reef Chat
+                </button>
+            </form>
+        </div>
+
+        <div class="text-center mt-6">
+            <p class="text-gray-500 text-xs font-light">
+                Secure access to The Reef Administration Handbook
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-focus password field
+        document.getElementById('password').focus();
+        
+        // Clear any error message after 5 seconds
+        const errorDiv = document.querySelector('.bg-red-600');
+        if (errorDiv) {
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

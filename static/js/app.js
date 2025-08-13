@@ -1,68 +1,21 @@
 function chatApp() {
     return {
         loading: true,
-        showUploadModal: false,
         messages: [],
         currentQuery: '',
         isTyping: false,
-        documentStatus: { document_count: 0, has_documents: false },
         suggestions: [
-            'Summarize the key points from my documents',
-            'What are the main themes discussed?',
-            'Find information about'
+            'What paperwork do I need before releasing my music?',
+            'How do I set up the essential accounts for music distribution?',
+            'What are ISRC codes and why do I need them?',
+            'How can I build my artist profile on streaming platforms?'
         ],
         
-        async init() {
-            // Check document status
-            try {
-                const response = await fetch('/status');
-                const status = await response.json();
-                this.documentStatus = status.documents;
-            } catch (error) {
-                console.warn('Could not fetch status:', error);
-            }
-            
-            // Simulate loading time
+        init() {
+            // Simulate loading time with logo animation
             setTimeout(() => {
                 this.loading = false;
-            }, 1500);
-            
-            // Set up file input reference
-            this.$nextTick(() => {
-                const fileInput = document.getElementById('fileInput');
-                this.$refs.fileInput = fileInput;
-            });
-        },
-        
-        async uploadFile(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            const formData = new FormData();
-            formData.append('file', file);
-            
-            try {
-                const response = await fetch('/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const result = await response.json();
-                
-                if (response.ok) {
-                    this.showUploadModal = false;
-                    this.documentStatus.has_documents = true;
-                    this.documentStatus.document_count += result.chunks_count || 1;
-                    this.showNotification('File uploaded and processed successfully!', 'success');
-                } else {
-                    this.showNotification(result.error || 'Upload failed', 'error');
-                }
-            } catch (error) {
-                this.showNotification('Upload failed: ' + error.message, 'error');
-            }
-            
-            // Reset file input
-            event.target.value = '';
+            }, 2000);
         },
         
         selectSuggestion(suggestion) {
@@ -125,7 +78,7 @@ function chatApp() {
                                     
                                     if (data.response) {
                                         assistantMessage.content += data.response;
-                                        console.log('Updated message content:', assistantMessage.content);
+                                        this.updateMessageContent(assistantMessage, assistantMessage.content);
                                         
                                         // Force Alpine.js reactivity update
                                         const messageIndex = this.messages.findIndex(m => m.id === assistantMessage.id);
@@ -184,11 +137,55 @@ function chatApp() {
             const message = {
                 id: Date.now() + Math.random(),
                 type,
-                content
+                content,
+                renderedContent: type === 'assistant' ? this.renderMarkdown(content) : content
             };
             this.messages.push(message);
             this.$nextTick(() => this.scrollToBottom());
             return message;
+        },
+        
+        renderMarkdown(content) {
+            if (!content || typeof content !== 'string') return '';
+            
+            try {
+                // Configure marked for safe rendering
+                marked.setOptions({
+                    breaks: true,
+                    gfm: true,
+                    headerIds: false,
+                    mangle: false
+                });
+                
+                // Parse markdown
+                const html = marked.parse(content);
+                
+                // Sanitize HTML to prevent XSS
+                const cleanHtml = DOMPurify.sanitize(html, {
+                    ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'ul', 'ol', 'li', 'code', 'pre', 'blockquote'],
+                    ALLOWED_ATTR: []
+                });
+                
+                return cleanHtml;
+            } catch (error) {
+                console.warn('Markdown rendering error:', error);
+                return content; // Fallback to plain text
+            }
+        },
+        
+        updateMessageContent(message, newContent) {
+            message.content = newContent;
+            if (message.type === 'assistant') {
+                message.renderedContent = this.renderMarkdown(newContent);
+            }
+        },
+        
+        autoResize() {
+            const textarea = this.$refs.textarea;
+            if (textarea) {
+                textarea.style.height = 'auto';
+                textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+            }
         },
         
         scrollToBottom() {
@@ -199,10 +196,10 @@ function chatApp() {
         },
         
         showNotification(message, type = 'info') {
-            // Simple notification - could be enhanced with a toast library
-            const color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'blue';
+            // Simple notification with dark theme
+            const colorClass = type === 'error' ? 'bg-red-600' : type === 'success' ? 'bg-green-600' : 'bg-gray-700';
             const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 bg-${color}-500 text-white px-4 py-2 rounded-lg shadow-lg z-50`;
+            notification.className = `fixed top-4 right-4 ${colorClass} text-white px-4 py-2 rounded-lg shadow-lg z-50 border border-gray-600`;
             notification.textContent = message;
             document.body.appendChild(notification);
             
