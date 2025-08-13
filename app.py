@@ -63,8 +63,12 @@ cag_chain = CAGChain(handbook_path)
 def require_auth():
     """Check if user is authenticated"""
     app_password = os.getenv('APP_PASSWORD')
+    flask_env = os.getenv('FLASK_ENV', 'development')
+    
     if not app_password:
-        return True  # No password set, allow access
+        if flask_env == 'production':
+            return False  # Force authentication in production
+        return True  # Allow access in development if no password set
     return session.get('authenticated') == True
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -88,6 +92,16 @@ def logout():
 
 @app.route('/')
 def index():
+    # Debug info for production
+    app_password = os.getenv('APP_PASSWORD')
+    flask_env = os.getenv('FLASK_ENV', 'development')
+    is_authenticated = session.get('authenticated')
+    
+    print(f"DEBUG - APP_PASSWORD set: {bool(app_password)}")
+    print(f"DEBUG - FLASK_ENV: {flask_env}")
+    print(f"DEBUG - Session authenticated: {is_authenticated}")
+    print(f"DEBUG - require_auth() result: {require_auth()}")
+    
     if not require_auth():
         return redirect(url_for('login'))
     return render_template('index.html')
